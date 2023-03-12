@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @FunctionalInterface
 public interface AnnotationResolver<A extends Annotation> {
 
-    Map<Class<? extends Annotation>, AnnotationResolver<? extends Annotation>> RESOLVER_MAP = Maps.buildHashMapMap(map -> {
+    Map<Class<? extends Annotation>, AnnotationResolver<? extends Annotation>> RESOLVER_MAP = Maps.buildHashMap(map -> {
         //Type & Method
         map.put(RequestMapping.class, new RequestMappingResolver());
         map.put(RequestPath.class, new RequestPathResolver());

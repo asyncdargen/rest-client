@@ -14,7 +14,7 @@ public class Maps {
         return map;
     }
 
-    public <K, V> Map<K, V> buildHashMapMap(Consumer<Map<K, V>> builder) {
+    public <K, V> Map<K, V> buildHashMap(Consumer<Map<K, V>> builder) {
         return buildMap(new HashMap<>(), builder);
     }
 

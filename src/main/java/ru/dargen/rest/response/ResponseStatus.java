@@ -87,7 +87,7 @@ public enum ResponseStatus {
 
     private final int code;
 
-    public static final Map<Integer, ResponseStatus> CODE_STATUSES = Maps.buildHashMapMap(map ->
+    public static final Map<Integer, ResponseStatus> CODE_STATUSES = Maps.buildHashMap(map ->
             Arrays.stream(values()).forEach(status -> map.put(status.code, status)));
 
     public static ResponseStatus getByCode(int code) {
