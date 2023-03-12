@@ -9,6 +9,8 @@ import ru.dargen.rest.request.Request;
 import ru.dargen.rest.serializer.BodyAdapter;
 import ru.dargen.rest.response.Response;
 
+import java.io.InputStream;
+
 @Getter @Setter
 @AllArgsConstructor
 public abstract class AbstractRestClient implements RestClient {
@@ -29,6 +31,6 @@ public abstract class AbstractRestClient implements RestClient {
         return ProxyResolver.createProxy(type, this);
     }
 
-    abstract Response<byte[]> execute(Request request);
+    abstract Response<InputStream> execute(Request request);
 
 }

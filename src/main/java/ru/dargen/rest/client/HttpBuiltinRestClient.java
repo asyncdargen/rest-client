@@ -2,13 +2,11 @@ package ru.dargen.rest.client;
 
 import lombok.SneakyThrows;
 import lombok.val;
-import lombok.var;
 import ru.dargen.rest.request.Request;
-import ru.dargen.rest.serializer.BodyAdapter;
 import ru.dargen.rest.response.Response;
 import ru.dargen.rest.response.ResponseStatus;
+import ru.dargen.rest.serializer.BodyAdapter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,9 +19,9 @@ public class HttpBuiltinRestClient extends AbstractRestClient {
 
     @Override
     @SneakyThrows
-    Response<byte[]> execute(Request request) {
+    Response<InputStream> execute(Request request) {
         ResponseStatus status = null;
-        byte[] body = new byte[0];
+        InputStream body = null;
 
         try {
             val connection = ((HttpURLConnection) new URL(request.getCompletedPath()).openConnection());
@@ -42,31 +40,12 @@ public class HttpBuiltinRestClient extends AbstractRestClient {
 
             status = ResponseStatus.getByCode(connection.getResponseCode());
 
-            try (val input = connection.getInputStream()) {
-                body = readAllBytes(input);
-            }
+            body = connection.getInputStream();
         } catch (Throwable throwable) {
             return new Response<>(status, body, throwable);
         }
 
         return new Response<>(status, body, null);
-    }
-
-    @SneakyThrows
-    protected static byte[] readAllBytes(InputStream inputStream) {
-        val buffer = new byte[2048];
-        var size = 0;
-
-        try (val baos = new ByteArrayOutputStream()) {
-            while ((size = inputStream.read(buffer)) != -1) {
-                baos.write(buffer, 0, size);
-            }
-
-            return baos.toByteArray();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            return new byte[0];
-        }
     }
 
 }

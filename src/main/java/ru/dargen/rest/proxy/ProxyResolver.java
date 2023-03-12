@@ -41,7 +41,7 @@ public class ProxyResolver {
         }
 
         invocationHandler.bind(BindingInvocationHandler.METHOD_TO_STRING, (method, args) -> {
-            return String.format("RestProxy[%s:%s]", interfaceClass, client);
+            return String.format("%s[%s]", interfaceClass.getName(), client);
         });
         invocationHandler.bind(BindingInvocationHandler.METHOD_EQUALS, (method, args) -> {
             return args[0] == proxy;
