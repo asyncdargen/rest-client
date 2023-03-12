@@ -14,8 +14,9 @@ public class TransformBodyStrategy {
 
     @SuppressWarnings("unchecked")
     public static <T> Response<T> transform(Response<InputStream> response, Class<T> type, BodyAdapter adapter) {
-        if (type == InputStream.class) return (Response<T>) response;
-        if (type == byte[].class)
+        if (type == InputStream.class)
+            return (Response<T>) response;
+        else if (type == byte[].class)
             return (Response<T>) response.withTransformedBody(TransformBodyStrategy::readAllBytes);
         else if (type == String.class)
             return (Response<T>) response.withTransformedBody(body -> new String(readAllBytes(body), StandardCharsets.UTF_8));
