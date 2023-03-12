@@ -1,5 +1,6 @@
 package ru.dargen.rest.proxy;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -16,6 +17,7 @@ public class BindingInvocationHandler implements InvocationHandler {
     public static final Method METHOD_HASH_CODE = getRootMethod("hashCode");
     public static final Method METHOD_EQUALS = getRootMethod("equals", Object.class);
 
+    @Getter
     private final Map<Method, BiFunction<Method, Object[], Object>> bindings = new HashMap<>();
 
     @Override
