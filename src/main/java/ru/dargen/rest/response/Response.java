@@ -22,7 +22,7 @@ public class Response<T> {
     @SneakyThrows
     public void rethrow() {
         if (isThrows())
-            throw throwable;
+            throw new ResponseException(status, throwable);
     }
 
     public <B> Response<B> withTransformedBody(Function<T, B> transformer) {

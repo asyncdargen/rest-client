@@ -17,4 +17,9 @@ public class VoidExecutor extends AbstractExecutor {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "VoidExecutor";
+    }
+
 }

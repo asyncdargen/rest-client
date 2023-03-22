@@ -8,12 +8,13 @@ import ru.dargen.rest.serializer.BodyAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
 public class TransformBodyStrategy {
 
     @SuppressWarnings("unchecked")
-    public static <T> Response<T> transform(Response<InputStream> response, Class<T> type, BodyAdapter adapter) {
+    public static <T> Response<T> transform(Response<InputStream> response, Type type, BodyAdapter adapter) {
         if (type == InputStream.class)
             return (Response<T>) response;
         else if (type == byte[].class)

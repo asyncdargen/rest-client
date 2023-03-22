@@ -3,6 +3,7 @@ package ru.dargen.rest.client;
 import lombok.SneakyThrows;
 import lombok.val;
 import ru.dargen.rest.request.Request;
+import ru.dargen.rest.request.RequestOption;
 import ru.dargen.rest.response.Response;
 import ru.dargen.rest.response.ResponseStatus;
 import ru.dargen.rest.serializer.BodyAdapter;
@@ -20,11 +21,16 @@ public class HttpBuiltinRestClient extends AbstractRestClient {
     @Override
     @SneakyThrows
     Response<InputStream> execute(Request request) {
-        ResponseStatus status = null;
+        ResponseStatus status = ResponseStatus.BAD_REQUEST;
         InputStream body = null;
 
         try {
             val connection = ((HttpURLConnection) new URL(request.getCompletedPath()).openConnection());
+
+            connection.setConnectTimeout(request.getOption(RequestOption.REQUEST_TIMEOUT));
+            connection.setReadTimeout(request.getOption(RequestOption.REQUEST_TIMEOUT));
+
+            connection.setUseCaches(request.getOption(RequestOption.USE_CACHE));
 
             connection.setDoInput(true);
             connection.setDoOutput(true);

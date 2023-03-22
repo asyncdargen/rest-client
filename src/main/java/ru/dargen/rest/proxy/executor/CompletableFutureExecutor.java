@@ -15,9 +15,11 @@ public class CompletableFutureExecutor extends AbstractExecutor {
 
     @Override
     public Object execute(Request request) {
-        return responseType == Void.TYPE || responseType == Void.class
-                ? CompletableFuture.runAsync(() -> executor.execute(request))
-                : CompletableFuture.supplyAsync(() -> executor.execute(request));
+        return CompletableFuture.supplyAsync(() -> executor.execute(request));
     }
 
+    @Override
+    public String toString() {
+        return "CompletableFutureExecutor[" + executor + "]";
+    }
 }

@@ -1,5 +1,6 @@
 package ru.dargen.rest.annotation.resolver;
 
+import lombok.val;
 import ru.dargen.rest.annotation.*;
 import ru.dargen.rest.annotation.parameter.*;
 import ru.dargen.rest.annotation.resolver.parameter.*;
@@ -10,6 +11,7 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @FunctionalInterface
@@ -19,11 +21,16 @@ public interface AnnotationResolver<A extends Annotation> {
         //Type & Method
         map.put(RequestMapping.class, new RequestMappingResolver());
         map.put(RequestPath.class, new RequestPathResolver());
+        map.put(RequestMethod.class, new RequestMethodResolver());
+
+        map.put(RequestOption.class, RequestOptionsResolver.SINGLE_RESOLVER);
+        map.put(RequestOptions.class, new RequestOptionsResolver());
+
         map.put(RequestParameter.class, RequestParametersResolver.SINGLE_RESOLVER);
         map.put(RequestHeaders.class, new RequestHeadersResolver());
+
         map.put(RequestHeader.class, RequestHeadersResolver.SINGLE_RESOLVER);
         map.put(RequestParameters.class, new RequestParametersResolver());
-        map.put(RequestMethod.class, new RequestMethodResolver());
 
         //Parameter
         map.put(Body.class, new BodyResolver());
@@ -45,12 +52,15 @@ public interface AnnotationResolver<A extends Annotation> {
     }
 
     static AnnotationResolverWrapper getWrapperFor(Annotation annotation) {
-        return new AnnotationResolverWrapper(annotation, getFor(annotation.annotationType()));
+        val resolver = getFor(annotation.annotationType());
+
+        return resolver == null ? null : new AnnotationResolverWrapper(annotation, resolver);
     }
 
     static List<AnnotationResolverWrapper> getWrappersFor(Annotation[] annotations) {
         return Arrays.stream(annotations)
                 .map(AnnotationResolver::getWrapperFor)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

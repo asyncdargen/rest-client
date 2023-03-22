@@ -11,7 +11,7 @@ import ru.dargen.rest.response.Response;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -50,9 +50,11 @@ public class ProxyResolver {
                     .collect(Collectors.toList());
 
             val executor = resolveExecutor(
-                    method.getReturnType(), method.getGenericReturnType(),
+                    method.getGenericReturnType(),
                     new Endpoint(request, parameters), client
             );
+
+            System.out.println(executor);
 
             invocationHandler.bind(method, executor);
         }
@@ -66,20 +68,16 @@ public class ProxyResolver {
         });
     }
 
-    private AbstractExecutor resolveExecutor(Class<?> responseType, Type genericsResponseType, Endpoint endpoint, RestClient client) {
+    private AbstractExecutor resolveExecutor(Type responseType, Endpoint endpoint, RestClient client) {
         if (responseType == Void.TYPE || responseType == Void.class)
             return new VoidExecutor(endpoint, client);
         else if (responseType == Response.class)
             return new ResponseExecutor(endpoint, client,
-                    (Class<?>) ((ParameterizedType) genericsResponseType).getActualTypeArguments()[0]);
-        else if (responseType == CompletableFuture.class) {
-            val genericType = ((ParameterizedType) genericsResponseType).getActualTypeArguments()[0];
-            return new CompletableFutureExecutor(resolveExecutor(
-                    Class.class.isAssignableFrom(genericType.getClass())
-                            ? (Class<?>) genericType
-                            : (Class<?>) ((ParameterizedType) genericType).getRawType(),
-                    genericType, endpoint, client
-            ));
+                    ((ParameterizedType) responseType).getActualTypeArguments()[0]);
+        else if (responseType.getClass() == Class.class && Future.class.isAssignableFrom((Class<?>) responseType) ||
+                responseType instanceof ParameterizedType && Future.class.isAssignableFrom((Class<?>) ((ParameterizedType) responseType).getRawType())) {
+            val genericType = ((ParameterizedType) responseType).getActualTypeArguments()[0];
+            return new CompletableFutureExecutor(resolveExecutor(genericType, endpoint, client));
         } else return new ResponseBodyExecutor(endpoint, client, responseType);
     }
 
@@ -88,7 +86,8 @@ public class ProxyResolver {
         request = request.isEmpty() ? request : request.clone();
 
         for (val annotation : element.getAnnotations()) {
-            AnnotationResolver.getFor(annotation).resolve(request, annotation);
+            val resolver = AnnotationResolver.getFor(annotation);
+            if (resolver != null) resolver.resolve(request, annotation);
         }
 
         return request;

@@ -17,6 +17,8 @@ public class Request {
     private String path = "";
     private HttpMethod method = HttpMethod.GET;
 
+    private final Map<String, Object> options = new HashMap<>();
+
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> parameters = new HashMap<>();
 
@@ -33,6 +35,29 @@ public class Request {
     public Request withMethod(HttpMethod method) {
         this.method = method;
         return this;
+    }
+
+    public <T> Request withOption(RequestOption<T> option, T value) {
+        options.put(option.getName(), value);
+        return this;
+    }
+
+    public Request withOptions(Map<String, Object> options) {
+        this.options.putAll(options);
+        return this;
+    }
+
+    public <T> Request resetOption(RequestOption<T> option) {
+        options.remove(option.getName());
+        return this;
+    }
+
+    public <T> boolean hasOption(RequestOption<T> option) {
+        return options.containsKey(option.getName());
+    }
+
+    public <T> T getOption(RequestOption<T> option) {
+        return (T) options.getOrDefault(option.getName(), option.getValue());
     }
 
     public Request withHeader(String key, String value) {
@@ -75,7 +100,7 @@ public class Request {
     }
 
     public boolean hasBody() {
-        return body != null && method.hasBody();
+        return body != null;
     }
 
     public boolean isEmpty() {
@@ -86,6 +111,7 @@ public class Request {
         return new Request()
                 .withPath(path)
                 .withMethod(method)
+                .withOptions(options)
                 .withParameters(parameters)
                 .withHeaders(headers)
                 .withBody(body);

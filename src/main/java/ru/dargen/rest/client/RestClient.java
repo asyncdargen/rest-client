@@ -1,8 +1,10 @@
 package ru.dargen.rest.client;
 
 import ru.dargen.rest.request.Request;
-import ru.dargen.rest.serializer.BodyAdapter;
 import ru.dargen.rest.response.Response;
+import ru.dargen.rest.serializer.BodyAdapter;
+
+import java.lang.reflect.Type;
 
 public interface RestClient {
 
@@ -12,7 +14,7 @@ public interface RestClient {
 
     Request getBaseRequest();
 
-    <T> Response<T> execute(Request request, Class<T> responseType);
+    <T> Response<T> execute(Request request, Type type);
 
     <I> I createController(Class<I> type);
 

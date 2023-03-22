@@ -9,6 +9,7 @@ import ru.dargen.rest.client.RestClient;
 import ru.dargen.rest.response.Response;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public abstract class AbstractExecutor implements BiFunction<Method, Object[], O
     protected final Endpoint endpoint;
     protected final RestClient client;
 
-    protected final Class<?> responseType;
+    protected final Type responseType;
 
     public Object execute(Request request) {
         return executeRequest(request);

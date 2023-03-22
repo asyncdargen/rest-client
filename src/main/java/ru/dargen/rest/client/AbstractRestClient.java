@@ -10,6 +10,7 @@ import ru.dargen.rest.serializer.BodyAdapter;
 import ru.dargen.rest.response.Response;
 
 import java.io.InputStream;
+import java.lang.reflect.Type;
 
 @Getter @Setter
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public abstract class AbstractRestClient implements RestClient {
     protected final Request baseRequest = new Request();
 
     @Override
-    public <T> Response<T> execute(Request request, Class<T> responseType) {
+    public <T> Response<T> execute(Request request, Type responseType) {
         val response = execute(request);
 
         return TransformBodyStrategy.transform(response, responseType, bodyAdapter);

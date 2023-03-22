@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.lang.reflect.Type;
+
 @Getter
 @RequiredArgsConstructor
 public class GsonBodyAdapter implements StringBodyAdapter {
@@ -16,7 +18,7 @@ public class GsonBodyAdapter implements StringBodyAdapter {
     }
 
     @Override
-    public <T> T deserializeString(String rawString, Class<T> type) {
+    public <T> T deserializeString(String rawString, Type type) {
         return gson.fromJson(rawString, type);
     }
 

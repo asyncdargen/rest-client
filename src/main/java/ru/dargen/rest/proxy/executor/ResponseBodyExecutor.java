@@ -5,9 +5,11 @@ import ru.dargen.rest.client.RestClient;
 import ru.dargen.rest.proxy.Endpoint;
 import ru.dargen.rest.request.Request;
 
+import java.lang.reflect.Type;
+
 public class ResponseBodyExecutor extends AbstractExecutor {
 
-    public ResponseBodyExecutor(Endpoint endpoint, RestClient client, Class<?> responseType) {
+    public ResponseBodyExecutor(Endpoint endpoint, RestClient client, Type responseType) {
         super(endpoint, client, responseType);
     }
 
@@ -19,4 +21,8 @@ public class ResponseBodyExecutor extends AbstractExecutor {
         return response.getBody();
     }
 
+    @Override
+    public String toString() {
+        return "ResponseBodyExecutor[of " + responseType + "]";
+    }
 }

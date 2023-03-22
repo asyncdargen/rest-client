@@ -94,4 +94,8 @@ public enum ResponseStatus {
         return CODE_STATUSES.get(code);
     }
 
+    @Override
+    public String toString() {
+        return name() + "(" + code + ")";
+    }
 }
