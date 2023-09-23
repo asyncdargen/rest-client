@@ -2,6 +2,7 @@ package ru.dargen.rest.proxy;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import ru.dargen.rest.annotation.JsonQuery;
 import ru.dargen.rest.annotation.resolver.AnnotationResolver;
 import ru.dargen.rest.annotation.util.RecomputeController;
 import ru.dargen.rest.client.RestClient;
@@ -50,11 +51,12 @@ public class ProxyResolver {
                     .collect(Collectors.toList());
 
             val executor = resolveExecutor(
+                    method,
                     method.getGenericReturnType(),
                     new Endpoint(request, parameters), client
             );
 
-            System.out.println(executor);
+//            System.out.println(executor);
 
             invocationHandler.bind(method, executor);
         }
@@ -68,7 +70,7 @@ public class ProxyResolver {
         });
     }
 
-    private AbstractExecutor resolveExecutor(Type responseType, Endpoint endpoint, RestClient client) {
+    private AbstractExecutor resolveExecutor(Method method, Type responseType, Endpoint endpoint, RestClient client) {
         if (responseType == Void.TYPE || responseType == Void.class)
             return new VoidExecutor(endpoint, client);
         else if (responseType == Response.class)
@@ -77,8 +79,10 @@ public class ProxyResolver {
         else if (responseType.getClass() == Class.class && Future.class.isAssignableFrom((Class<?>) responseType) ||
                 responseType instanceof ParameterizedType && Future.class.isAssignableFrom((Class<?>) ((ParameterizedType) responseType).getRawType())) {
             val genericType = ((ParameterizedType) responseType).getActualTypeArguments()[0];
-            return new CompletableFutureExecutor(resolveExecutor(genericType, endpoint, client));
-        } else return new ResponseBodyExecutor(endpoint, client, responseType);
+            return new CompletableFutureExecutor(resolveExecutor(method, genericType, endpoint, client));
+        } else if (method.isAnnotationPresent(JsonQuery.class))
+            return new JsonQueryResponseExecutor(endpoint, client, method.getAnnotation(JsonQuery.class).value(), responseType);
+        else return new ResponseBodyExecutor(endpoint, client, responseType);
     }
 
     @SuppressWarnings("all")
