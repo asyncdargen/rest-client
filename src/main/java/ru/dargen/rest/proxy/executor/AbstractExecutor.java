@@ -31,11 +31,11 @@ public abstract class AbstractExecutor implements BiFunction<Method, Object[], O
 
     @Override
     public Object apply(Method method, Object[] objects) {
-        val request = endpoint.getRequest().clone();
+        val request = endpoint.request().clone();
 
-        for (int i = 0; i < endpoint.getParameterResolvers().size(); i++) {
+        for (int i = 0; i < endpoint.parameterResolvers().size(); i++) {
             val object = objects[i];
-            endpoint.getParameterResolvers()
+            endpoint.parameterResolvers()
                     .get(i)
                     .forEach(resolver -> resolver.resolve(request, object));
         }

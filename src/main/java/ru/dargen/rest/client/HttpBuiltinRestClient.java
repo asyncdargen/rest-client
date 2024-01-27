@@ -11,6 +11,8 @@ import ru.dargen.rest.serializer.BodyAdapter;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpBuiltinRestClient extends AbstractRestClient {
 
@@ -23,6 +25,7 @@ public class HttpBuiltinRestClient extends AbstractRestClient {
     Response<InputStream> execute(Request request) {
         ResponseStatus status = ResponseStatus.BAD_REQUEST;
         InputStream body = null;
+        Map<String, String> headers = new HashMap<>();
 
         try {
             val connection = ((HttpURLConnection) new URL(request.getCompletedPath()).openConnection());
@@ -44,14 +47,16 @@ public class HttpBuiltinRestClient extends AbstractRestClient {
                 out.flush();
             }
 
+            connection.getHeaderFields().forEach((key, value) -> headers.put(key, value.get(0)));
+
             status = ResponseStatus.getByCode(connection.getResponseCode());
 
             body = connection.getInputStream();
         } catch (Throwable throwable) {
-            return new Response<>(status, body, throwable);
+            return new Response<>(status, headers, body, throwable);
         }
 
-        return new Response<>(status, body, null);
+        return new Response<>(status, headers, body, null);
     }
 
 }

@@ -13,7 +13,7 @@ public class Json {
 
     public Pattern INT_PATTERN = Pattern.compile("^\\d+$");
 
-    public Pattern QUERY_PATTERN = Pattern.compile("([\\w-]+)|(\\[(\\d+)\\])");
+    public Pattern QUERY_PATTERN = Pattern.compile("([\\w-]+)|(\\[(\\d+)])");
 
     public JsonElement query(JsonElement element, String query) {
         if (element == null || query == null)

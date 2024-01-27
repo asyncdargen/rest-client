@@ -38,7 +38,7 @@ public class Request {
     }
 
     public <T> Request withOption(RequestOption<T> option, T value) {
-        options.put(option.getName(), value);
+        options.put(option.name(), value);
         return this;
     }
 
@@ -48,16 +48,17 @@ public class Request {
     }
 
     public <T> Request resetOption(RequestOption<T> option) {
-        options.remove(option.getName());
+        options.remove(option.name());
         return this;
     }
 
     public <T> boolean hasOption(RequestOption<T> option) {
-        return options.containsKey(option.getName());
+        return options.containsKey(option.name());
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getOption(RequestOption<T> option) {
-        return (T) options.getOrDefault(option.getName(), option.getValue());
+        return (T) options.getOrDefault(option.name(), option.value());
     }
 
     public Request withHeader(String key, String value) {

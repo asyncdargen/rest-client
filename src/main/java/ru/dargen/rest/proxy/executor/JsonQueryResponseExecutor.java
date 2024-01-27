@@ -26,14 +26,15 @@ public class JsonQueryResponseExecutor extends ResponseBodyExecutor {
     public Object execute(Request request) {
         val json = Json.query((JsonObject) super.execute(request), query);
 
-        if (json == null)
+        if (json == null) {
             return null;
-        else if (exctractedType == JsonElement.class)
+        } else if (exctractedType == JsonElement.class) {
             return json;
-        else if (exctractedType == JsonObject.class)
+        } else if (exctractedType == JsonObject.class) {
             return json.getAsJsonObject();
-        else if (exctractedType == JsonArray.class)
+        } else if (exctractedType == JsonArray.class) {
             return json.getAsJsonArray();
+        }
 
         val bodyAdapter = client.getBodyAdapter();
         val serialized = bodyAdapter.serialize(json);

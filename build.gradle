@@ -1,24 +1,22 @@
 plugins {
     id 'java'
-    id 'java-library'
 }
 
 group = 'ru.dargen'
-version = '1.0.0'
+version = '1.0.1'
 
 repositories {
     mavenCentral()
 }
 
-java {
-    withSourcesJar()
-}
-
 dependencies {
-    api 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
-    testCompileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    withSourcesJar()
 }

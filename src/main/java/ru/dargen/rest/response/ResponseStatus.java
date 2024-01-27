@@ -2,10 +2,10 @@ package ru.dargen.rest.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import ru.dargen.rest.util.Maps;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -87,8 +87,8 @@ public enum ResponseStatus {
 
     private final int code;
 
-    public static final Map<Integer, ResponseStatus> CODE_STATUSES = Maps.buildHashMap(map ->
-            Arrays.stream(values()).forEach(status -> map.put(status.code, status)));
+    public static final Map<Integer, ResponseStatus> CODE_STATUSES = Arrays.stream(values())
+            .collect(Collectors.toMap(ResponseStatus::getCode, status -> status));
 
     public static ResponseStatus getByCode(int code) {
         return CODE_STATUSES.get(code);
@@ -98,4 +98,5 @@ public enum ResponseStatus {
     public String toString() {
         return name() + "(" + code + ")";
     }
+
 }

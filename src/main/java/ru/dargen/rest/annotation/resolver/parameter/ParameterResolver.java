@@ -8,8 +8,9 @@ public class ParameterResolver implements AnnotationResolver<Parameter> {
 
     @Override
     public void resolve(Request request, Parameter annotation, Object object) {
-        if (object != null || annotation.nullable())
+        if (object != null || annotation.nullable()) {
             request.withParameter(annotation.value(), object == null ? "null" : object.toString());
+        }
     }
 
 }
