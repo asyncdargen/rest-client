@@ -1,4 +1,4 @@
-# Modulo
+# Rest Client
 Java library to simple creating requestes with interface proxies
 ___
 ## Add to project
