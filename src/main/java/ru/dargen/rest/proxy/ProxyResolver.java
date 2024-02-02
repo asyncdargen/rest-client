@@ -77,7 +77,7 @@ public class ProxyResolver {
         } else if (responseType.getClass() == Class.class && Future.class.isAssignableFrom((Class<?>) responseType) ||
                 responseType instanceof ParameterizedType && Future.class.isAssignableFrom((Class<?>) ((ParameterizedType) responseType).getRawType())) {
             val genericType = ((ParameterizedType) responseType).getActualTypeArguments()[0];
-            return new CompletableFutureExecutor(resolveExecutor(method, genericType, endpoint, client));
+            return new AsyncExecutor(resolveExecutor(method, genericType, endpoint, client));
         } else if (method.isAnnotationPresent(JsonQuery.class)) {
             return new JsonQueryResponseExecutor(endpoint, client, method.getAnnotation(JsonQuery.class).value(), responseType);
         }
