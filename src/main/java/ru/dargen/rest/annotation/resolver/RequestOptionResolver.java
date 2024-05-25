@@ -14,7 +14,7 @@ public class RequestOptionResolver implements AnnotationResolver<RequestOption> 
     }
 
     public Object parseOption(ru.dargen.rest.request.RequestOption<Object> option, String value) {
-        val optionType = option.getValue().getClass();
+        val optionType = option.value().getClass();
         if (optionType == Integer.class) return Integer.parseInt(value);
         else if (optionType == Boolean.class) return Boolean.parseBoolean(value);
         else throw new IllegalStateException("Unresolvable option type");
