@@ -9,7 +9,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public class AsyncExecutor extends AbstractExecutor {
 
-    public static final Executor EXECUTOR = Executors.newFixedThreadPool(3);
+    public static final Executor EXECUTOR = Executors.newVirtualThreadPerTaskExecutor();
 
     private final AbstractExecutor executor;
 

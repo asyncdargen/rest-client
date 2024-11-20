@@ -1,5 +1,6 @@
 package ru.dargen.rest;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.experimental.UtilityClass;
 import lombok.val;
@@ -26,12 +27,16 @@ public class RestClientFactory {
 
         if (builder != null)
             builder.accept(gsonBuilder);
+        var gson = gsonBuilder.create();
+        return new GsonBodyAdapter(() -> gson);
+    }
 
-        return new GsonBodyAdapter(gsonBuilder.create());
+    public BodyAdapter createGsonBodyAdapter(Gson gson) {
+        return new GsonBodyAdapter(() -> gson);
     }
 
     public BodyAdapter createGsonBodyAdapter() {
-        return createGsonBodyAdapter(null);
+        return createGsonBodyAdapter((Consumer<GsonBuilder>) null);
     }
 
 }

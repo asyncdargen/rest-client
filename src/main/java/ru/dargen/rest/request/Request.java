@@ -24,6 +24,14 @@ public class Request {
 
     private Object body;
 
+    public Request withAuthorization(String authorization, String value) {
+        return withHeader("Authorization",(authorization == null ? "" : authorization + " ") + value);
+    }
+
+    public Request withAuthorization(String value) {
+        return withAuthorization(null, value);
+    }
+
     public Request withPath(String path) {
         if (path.isEmpty())
             return this;
