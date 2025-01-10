@@ -12,6 +12,7 @@ import ru.dargen.rest.util.ReflectUtil;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,9 @@ public class ProxyResolver {
             Class<?> interfaceClass, RestClient client, Request request,
             BindingInvocationHandler invocationHandler, Object proxy) {
 
-        for (Class<?> clazz : ReflectUtil.scanInterfaces(interfaceClass).reversed()) {
+        var interfaces = ReflectUtil.scanInterfaces(interfaceClass);
+        Collections.reverse(interfaces);
+        for (Class<?> clazz : interfaces) {
             request = resolveRequest(request, clazz);
 
             for (Method method : clazz.getDeclaredMethods()) {
