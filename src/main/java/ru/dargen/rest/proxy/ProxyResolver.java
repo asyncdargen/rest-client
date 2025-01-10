@@ -1,6 +1,7 @@
 package ru.dargen.rest.proxy;
 
 import lombok.experimental.UtilityClass;
+import ru.dargen.rest.annotation.Async;
 import ru.dargen.rest.annotation.JsonQuery;
 import ru.dargen.rest.annotation.resolver.AnnotationResolver;
 import ru.dargen.rest.client.RestClient;
@@ -64,7 +65,7 @@ public class ProxyResolver {
 
     private AbstractExecutor resolveExecutor(Method method, Type responseType, Endpoint endpoint, RestClient client) {
         if (responseType == void.class || responseType == Void.class) {
-            return new VoidExecutor(endpoint, client);
+            return new VoidExecutor(endpoint, client, method.isAnnotationPresent(Async.class));
         } else if (responseType == Response.class) {
             return new ResponseExecutor(endpoint, client,
                     ((ParameterizedType) responseType).getActualTypeArguments()[0]);

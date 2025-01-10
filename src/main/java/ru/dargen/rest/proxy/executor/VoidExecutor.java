@@ -6,13 +6,17 @@ import ru.dargen.rest.request.Request;
 
 public class VoidExecutor extends AbstractExecutor {
 
-    public VoidExecutor(Endpoint endpoint, RestClient client) {
+    protected final boolean async;
+
+    public VoidExecutor(Endpoint endpoint, RestClient client, boolean async) {
         super(endpoint, client, byte[].class);
+        this.async = async;
     }
 
     @Override
     public Object execute(Request request) {
-        super.executeRequest(request).rethrow();
+        if (async) AsyncExecutor.EXECUTOR.execute(() -> super.executeRequest(request).rethrow());
+        else super.executeRequest(request).rethrow();
 
         return null;
     }

@@ -9,11 +9,11 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public class AsyncExecutor extends AbstractExecutor {
 
-    public static final Executor EXECUTOR = Executors.newVirtualThreadPerTaskExecutor();
+    public static Executor EXECUTOR = Executors.newSingleThreadExecutor();
 
     private final AbstractExecutor executor;
 
-    public AsyncExecutor(AbstractExecutor executor) {
+    public  AsyncExecutor(AbstractExecutor executor) {
         super(executor.endpoint, executor.client, executor.responseType);
         this.executor = executor;
     }

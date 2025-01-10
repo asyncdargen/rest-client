@@ -3,6 +3,7 @@ package ru.dargen.rest.proxy.executor;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import lombok.val;
 import ru.dargen.rest.client.RestClient;
 import ru.dargen.rest.proxy.Endpoint;
@@ -17,14 +18,14 @@ public class JsonQueryResponseExecutor extends ResponseBodyExecutor {
     protected final Type exctractedType;
 
     public JsonQueryResponseExecutor(Endpoint endpoint, RestClient client, String query, Type responseType) {
-        super(endpoint, client, JsonObject.class);
+        super(endpoint, client, JsonElement.class);
         exctractedType = responseType;
         this.query = query;
     }
 
     @Override
     public Object execute(Request request) {
-        val json = Json.query((JsonObject) super.execute(request), query);
+        val json = Json.query((JsonElement) super.execute(request), query);
 
         if (json == null) {
             return null;
@@ -33,6 +34,8 @@ public class JsonQueryResponseExecutor extends ResponseBodyExecutor {
         } else if (exctractedType == JsonObject.class) {
             return json.getAsJsonObject();
         } else if (exctractedType == JsonArray.class) {
+            return json.getAsJsonArray();
+        } else if (exctractedType == JsonPrimitive.class) {
             return json.getAsJsonArray();
         }
 
